@@ -2722,7 +2722,7 @@ CONTAINS
              Is_Wetdep     = F
              Is_Photolysis = T
 
-          CASE( 'OCPI' )
+          CASE( 'OCPI','BFOCPI', 'BFOCPI1', 'BBOCPI', 'BBOCPI1')
              FullName      = 'Hydrophilic organic carbon aerosol'
 
              ! Halve the Kc (cloud condensate -> precip) rate
@@ -2755,7 +2755,7 @@ CONTAINS
              WD_KcScaleFac = KcScale
              WD_RainoutEff = RainEff
 
-          CASE( 'OCPO' )
+          CASE( 'OCPO','BFOCPO','BBOCPO','BFOCPO1','BBOCPO1' )
              Fullname      = 'Hydrophobic organic carbon aerosol'
 
 #ifdef LUO_WETDEP

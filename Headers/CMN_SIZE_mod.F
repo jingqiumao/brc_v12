@@ -67,7 +67,7 @@
       INTEGER,    PARAMETER :: NDUST = 7
 
       ! NRHAER -- Number of aerosols undergoing hygroscopic growth
-      INTEGER,    PARAMETER :: NRHAER = 5
+      INTEGER,    PARAMETER :: NRHAER = 7
 
       ! NSTRATAER -- Number of stratospheric aerosols (SDE 04/17/13)
       INTEGER,    PARAMETER :: NSTRATAER = 2

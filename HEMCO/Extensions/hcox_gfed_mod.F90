@@ -405,9 +405,13 @@ CONTAINS
        SpcArr = SpcArr * Inst%SpcScal(N)
 
        SELECT CASE ( Inst%SpcNames(N) )
-          CASE ( 'OCPI' )
+!          CASE ( 'OCPI' )
+!             SpcArr = SpcArr * Inst%OCPIfrac
+!          CASE ( 'OCPO' )
+!             SpcArr = SpcArr * (1.0_sp - Inst%OCPIfrac)
+          CASE ( 'BBOCPI' )
              SpcArr = SpcArr * Inst%OCPIfrac
-          CASE ( 'OCPO' )
+          CASE ( 'BBOCPO' )
              SpcArr = SpcArr * (1.0_sp - Inst%OCPIfrac)
           CASE ( 'BCPI' )
              SpcArr = SpcArr * Inst%BCPIfrac
@@ -855,6 +859,8 @@ CONTAINS
           ELSEIF ( SpcName(1:2) == 'BC' ) THEN
              SpcName = 'BC'
           ELSEIF ( SpcName(1:2) == 'OC' ) THEN
+             SpcName = 'OC'
+          ELSEIF ( SpcName(3:4) == 'OC' ) THEN
              SpcName = 'OC'
           ENDIF
        ENDIF
