@@ -663,35 +663,35 @@
             ! SOAupdate: Treat either OCPO (x2.1) or POA (x1.4)
             IF ( IS_POA ) THEN
                OCPO(I,J,L) = ( Spc(I,J,L,id_POA1) + Spc(I,J,L,id_POA2) )
-     &                       * OCFPOA / AIRVOL(I,J,L)
+     &                       * OCFPOA(I,J) / AIRVOL(I,J,L)
             ELSE IF ( IS_OCPO ) THEN
                OCPO(I,J,L) = Spc(I,J,L,id_OCPO)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
 
                bfOCPO(I,J,L) = Spc(I,J,L,id_bfOCPO)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
                bfOCPO1(I,J,L) = Spc(I,J,L,id_bfOCPO1)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
                bbOCPO(I,J,L) = Spc(I,J,L,id_bbOCPO)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
                bbOCPO1(I,J,L) = Spc(I,J,L,id_bbOCPO1)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
 
             ENDIF
 
             ! Hydrophilic OC [kg/m3]
             IF ( IS_OCPI ) THEN
                OCPI(I,J,L) = Spc(I,J,L,id_OCPI)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J)/ AIRVOL(I,J,L)
 
                bfOCPI(I,J,L) = Spc(I,J,L,id_bfOCPI)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
                bfOCPI1(I,J,L) = Spc(I,J,L,id_bfOCPI1)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
                bbOCPI(I,J,L) = Spc(I,J,L,id_bbOCPI)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
                bbOCPI1(I,J,L) = Spc(I,J,L,id_bbOCPI1)
-     &                       * OCFOPOA / AIRVOL(I,J,L)
+     &                       * OCFOPOA(I,J) / AIRVOL(I,J,L)
 
             ENDIF
 
@@ -2008,7 +2008,7 @@
      &                              * ISOAAQ(I,J,L) * QQAA(IWV,1,N) /
      &                              ( MSDENS(N) * REAA(1,N) * 1.0D-6 )
                ENDIF
-
+               ENDIF
             ELSE
 
                !--------------------------------------------------------
@@ -2033,7 +2033,6 @@
      &                              * QQAA(IWV,1,N)
 
             ENDIF
-           ENDIF
 #if defined( RRTMG )
             !SNA currently treated as one with optics but considered
             !separately for RT, so we split them by mass here

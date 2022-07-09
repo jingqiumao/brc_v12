@@ -552,7 +552,7 @@
 
       IF ( id_bfOCPO > 0 ) THEN
          CALL CHEM_OCPO( am_I_Root, Input_Opt, State_Diag, State_Grid,
-      &                  Spc(:,:,:,id_bfOCPO), RC)
+     &                  Spc(:,:,:,id_bfOCPO), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bfOCPO' )
          ENDIF
@@ -560,7 +560,7 @@
 
       IF ( id_bfOCPI > 0 ) THEN
          CALL CHEM_OCPI( am_I_Root, Input_Opt, State_Diag, State_Grid,
-      &                   Spc(:,:,:,id_bfOCPI), RC)
+     &                   Spc(:,:,:,id_bfOCPI), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bfOCPI' )
          ENDIF
@@ -568,7 +568,7 @@
 
       IF ( id_bbOCPO > 0 ) THEN
          CALL CHEM_OCPO( am_I_Root, Input_Opt, State_Diag, State_Grid,
-      &                   Spc(:,:,:,id_bbOCPO), RC)
+     &                   Spc(:,:,:,id_bbOCPO), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bbOCPO' )
          ENDIF
@@ -576,7 +576,7 @@
 
       IF ( id_bbOCPI > 0 ) THEN
          CALL CHEM_OCPI( am_I_Root, Input_Opt, State_Diag, State_Grid,
-      &                   Spc(:,:,:,id_bbOCPI), RC)
+     &                   Spc(:,:,:,id_bbOCPI), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bbOCPI' )
          ENDIF
@@ -584,7 +584,7 @@
 
       IF ( id_bfOCPO1 > 0 ) THEN
          CALL CHEM_OCPO( am_I_Root, Input_Opt, State_Diag, State_Grid,
-      &                   Spc(:,:,:,id_bfOCPO1),RC)
+     &                   Spc(:,:,:,id_bfOCPO1),RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bfOCPO1' )
          ENDIF
@@ -592,21 +592,23 @@
 
       IF ( id_bfOCPI1 > 0 ) THEN
          CALL CHEM_OCPI( am_I_Root, Input_Opt, State_Diag, State_Grid,
-      &                   Spc(:,:,:,id_bfOCPI1),RC)
+     &                   Spc(:,:,:,id_bfOCPI1),RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bfOCPI1' )
          ENDIF
       ENDIF
   
       IF ( id_bbOCPO1 > 0 ) THEN
-         CALL CHEM_OCPO( am_I_Root, Input_Opt, Spc(:,:,:,id_bbOCPO1),RC)
+         CALL CHEM_OCPO( am_I_Root, Input_Opt, State_Diag, State_Grid,
+     &                   Spc(:,:,:,id_bbOCPO1),RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bbOCPO1' )
          ENDIF
       ENDIF
 
       IF ( id_bbOCPI1 > 0 ) THEN
-         CALL CHEM_OCPI( am_I_Root, Input_Opt, Spc(:,:,:,id_bbOCPI1),RC)
+         CALL CHEM_OCPI( am_I_Root, Input_Opt, State_Diag, State_Grid,
+     &                   Spc(:,:,:,id_bbOCPI1),RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_bbOCPI1' )
          ENDIF
@@ -614,7 +616,8 @@
 
       ! Chemistry for brown carbon photobleaching
       IF ( id_bbOCPI1 > 0 ) THEN
-         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Met, 
+         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Grid, 
+     &                  State_Met, 
      &            Spc(:,:,:,id_bbOCPI), Spc(:,:,:,id_bbOCPI1), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_BRC bb OCPI' )
@@ -622,7 +625,8 @@
       ENDIF
 
       IF ( id_bfOCPI1 > 0 ) THEN
-         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Met,
+         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Grid, 
+     &                  State_Met,
      &            Spc(:,:,:,id_bfOCPI), Spc(:,:,:,id_bfOCPI1), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_BRC bf OCPI' )
@@ -630,7 +634,8 @@
       ENDIF
 
       IF ( id_bbOCPO1 > 0 ) THEN
-         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Met,
+         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Grid, 
+     &                  State_Met,
      &            Spc(:,:,:,id_bbOCPO), Spc(:,:,:,id_bbOCPO1), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_BRC bb OCPO' )
@@ -638,7 +643,8 @@
       ENDIF
 
       IF ( id_bfOCPO1 > 0 ) THEN
-         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Met,
+         CALL CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Grid,
+     &                  State_Met,
      &            Spc(:,:,:,id_bfOCPO), Spc(:,:,:,id_bfOCPO1), RC)
          IF ( prtDebug ) THEN
             CALL DEBUG_MSG( '### CHEMCARBON: a CHEM_BRC bf OCPO' )
@@ -1492,8 +1498,9 @@
 !\\
 ! !INTERFACE:
 !
-      SUBROUTINE CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Met, 
-     &                      TC, TC1, RC )
+      SUBROUTINE CHEM_BRC( am_I_Root, Input_Opt, State_Chm, State_Grid,
+     &                     State_Met, TC,TC1, RC)
+                           
 !
 ! !USES:
 !
@@ -1503,19 +1510,23 @@
       USE Input_Opt_Mod,      ONLY : OptInput
       USE State_Met_Mod,      ONLY : MetState
       USE State_Chm_Mod,      ONLY : ChmState
+      USE State_Grid_Mod,     ONLY : GrdState
       USE TIME_MOD,           ONLY : GET_TS_CHEM
 !
 ! !INPUT PARAMETERS: 
 !
       LOGICAL,        INTENT(IN)    :: am_I_Root             ! Root CPU?
       TYPE(OptInput), INTENT(IN)    :: Input_Opt             ! Input Options
-      TYPE(ChmState), INTENT(IN)  :: State_Chm   ! Chemistry State object
-      TYPE(MetState), INTENT(IN)  :: State_Met   ! Meteorology State object
+      TYPE(ChmState), INTENT(IN)    :: State_Chm   ! Chemistry State object
+      TYPE(MetState), INTENT(IN)    :: State_Met   ! Meteorology State object
+      TYPE(GrdState), INTENT(IN)    :: State_Grid         ! Grid State
 !
 ! !INPUT/OUTPUT PARAMETERS: 
 !
-      REAL(fp),       INTENT(INOUT) :: TC(IIPAR,JJPAR,LLPAR) ! not-aged BrC [kg]
-      REAL(fp),       INTENT(INOUT) :: TC1(IIPAR,JJPAR,LLPAR) ! aged BrC [kg]
+      REAL(fp),INTENT(INOUT)::TC(State_Grid%NX,State_Grid%NY,
+     &                           State_Grid%NZ) ! not-aged BrC [kg]
+      REAL(fp),INTENT(INOUT)::TC1(State_Grid%NX,State_Grid%NY,
+     &                           State_Grid%NZ) ! aged BrC [kg]
 !
 ! !OUTPUT PARAMETERS:
 !
@@ -1555,9 +1566,9 @@
 !$OMP+DEFAULT( SHARED )
 !$OMP+PRIVATE( I, J, L, TC0, TC2, KBR, OH, BRCONV, CNEW, RKT)
 !$OMP+SCHEDULE( DYNAMIC )
-      DO L = 1, LLPAR
-      DO J = 1, JJPAR
-      DO I = 1, IIPAR
+      DO L = 1, State_Grid%NZ
+      DO J = 1, State_Grid%NY
+      DO I = 1, State_Grid%NX
 
          ! Initial OC [kg]
          TC0 = TC(I,J,L)
