@@ -187,7 +187,7 @@
       ! NOTE: Increasing value of NRHAER in CMN_SIZE_Mod.F (e.g. if there is
       ! a new hygroscopic species) requires manual update of this mapping
       ! (ewl, 1/23/17)
-      INTEGER :: Map_NRHAER(5)
+      INTEGER :: Map_NRHAER(7)
 
       ! Diagnostic switches
       LOGICAL            :: Is_POA
@@ -1474,6 +1474,10 @@
                   Map_NRHAER(I) = 4
                CASE ( 'SALC' )
                   Map_NRHAER(I) = 5
+               CASE ( 'bfOCPI', 'bfOCPI1' )
+                  Map_NRHAER(I) = 6
+               CASE ( 'bbOCPI', 'bbOCPI1' )
+                  Map_NRHAER(I) = 7
                CASE DEFAULT
                   ErrMsg = 'WARNING: aerosol diagnostics not defined' //
      &                     ' for NRHAER greater than 5!'
@@ -2793,7 +2797,7 @@
       IF ( RC /= GC_SUCCESS ) RETURN
       bbOCPI1 = 0.0_fp
 
-      ALLOCATE( bfOCPO( State_Grid%NX, State_Grid%NY, State_Grid%NZ ),
+      ALLOCATE( bbOCPO( State_Grid%NX, State_Grid%NY, State_Grid%NZ ),
      &          STAT=RC )
       CALL GC_CheckVar( 'aerosol_mod.F:bbOCPO', 0, RC )
       IF ( RC /= GC_SUCCESS ) RETURN
