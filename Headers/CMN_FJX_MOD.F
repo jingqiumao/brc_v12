@@ -384,21 +384,21 @@
       !-----------------------------------------------------------------------
 
       IF ( Input_Opt%LUCX ) THEN
-         AN_          = 47  ! # of separate aerosols per layer; Including PSCs
+         AN_          = 57  ! # of separate aerosols per layer; Including PSCs
          W_           = 18  ! # of wavelength bins
+
+         ! For RRTMG:
+         NSPAA        = 12   ! number of species in LUT
+         NASPECRAD    = 18  ! aerosol species in RT
+         NSPECRAD     = 20  ! aerosol+gas species in RT
+      ELSE
+         AN_          = 55  ! # of separate aerosols per layer
+         W_           = 12  ! # of wavelength bins
 
          ! For RRTMG:
          NSPAA        = 10   ! number of species in LUT
          NASPECRAD    = 16  ! aerosol species in RT
          NSPECRAD     = 18  ! aerosol+gas species in RT
-      ELSE
-         AN_          = 45  ! # of separate aerosols per layer
-         W_           = 12  ! # of wavelength bins
-
-         ! For RRTMG:
-         NSPAA        = 8   ! number of species in LUT
-         NASPECRAD    = 14  ! aerosol species in RT
-         NSPECRAD     = 16  ! aerosol+gas species in RT
       ENDIF
 
       !-----------------------------------------------------------------------

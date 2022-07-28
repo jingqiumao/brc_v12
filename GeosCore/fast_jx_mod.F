@@ -2507,8 +2507,8 @@ c---TROP-QUICK  (must scale solar flux for W=5)
       CHARACTER(LEN=255) :: ThisLoc
 
       ! String arrays
-      CHARACTER(LEN=30)  :: SPECFIL(8)
-      CHARACTER(LEN=30)  :: SPECFIL_UCX(10)
+      CHARACTER(LEN=30)  :: SPECFIL(10)
+      CHARACTER(LEN=30)  :: SPECFIL_UCX(12)
 
       !================================================================
       ! RD_AOD begins here!
@@ -2523,8 +2523,8 @@ c---TROP-QUICK  (must scale solar flux for W=5)
 
       ! IMPORTANT: aerosol_mod.F and dust_mod.F expect aerosols in this order
       DATA SPECFIL /"so4.dat","soot.dat","org.dat",
-     &              "ssa.dat","ssc.dat","brc_bf.dat", "brc_bb.dat",
-     &              "dust.dat"/
+     &              "ssa.dat","ssc.dat","brc_bf.dat", "brc_bf.dat",
+     &              "brc_bb.dat", "brc_bb.dat","dust.dat"/
 
       ! For UCX simulations:
       !
@@ -2540,7 +2540,8 @@ c---TROP-QUICK  (must scale solar flux for W=5)
       DATA SPECFIL_UCX /"so4.dat","soot.dat","org.dat",
      &                  "ssa.dat","ssc.dat",
      &                  "h2so4.dat","h2so4.dat",
-     &                  "brc_bf.dat", "brc_bb.dat",
+     &                  "brc_bf.dat", "brc_bf.dat",
+     &                  "brc_bb.dat", "brc_bb.dat",
      &                  "dust.dat"/
 
       ! Loop over the array of filenames
@@ -4902,7 +4903,7 @@ C---Always does PL(2) = P[1]
       !=================================================================
 
       ! Taken from aerosol_mod.F
-      IND = (/22,29,36,43,50,36,36/)
+      IND = (/22,29,36,43,50,36,36,36,36/)
 
       DO I=1,AN_
          MIEDX(I) = 0

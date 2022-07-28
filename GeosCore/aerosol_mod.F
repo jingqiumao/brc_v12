@@ -187,7 +187,7 @@
       ! NOTE: Increasing value of NRHAER in CMN_SIZE_Mod.F (e.g. if there is
       ! a new hygroscopic species) requires manual update of this mapping
       ! (ewl, 1/23/17)
-      INTEGER :: Map_NRHAER(7)
+      INTEGER :: Map_NRHAER(9)
 
       ! Diagnostic switches
       LOGICAL            :: Is_POA
@@ -1474,10 +1474,14 @@
                   Map_NRHAER(I) = 4
                CASE ( 'SALC' )
                   Map_NRHAER(I) = 5
-               CASE ( 'bfOCPI', 'bfOCPI1' )
+               CASE ( 'bfOCPI')
                   Map_NRHAER(I) = 6
-               CASE ( 'bbOCPI', 'bbOCPI1' )
+               CASE ( 'bfOCPI1' )
                   Map_NRHAER(I) = 7
+               CASE ( 'bbOCPI')
+                  Map_NRHAER(I) = 8
+               CASE ( 'bbOCPI1' )
+                  Map_NRHAER(I) = 9
                CASE DEFAULT
                   ErrMsg = 'WARNING: aerosol diagnostics not defined' //
      &                     ' for NRHAER greater than 5!'
@@ -1566,6 +1570,15 @@
             ! Hydrophobic OC [kg/m3]
             DAERSL(I,J,L,2) = OCPO(I,J,L)
 
+            !Brown carbon [kg/m3]
+            WAERSL(I,J,L,6) = bfOCPI(I,J,L) 
+            WAERSL(I,J,L,7) = bfOCPI1(I,J,L)
+            WAERSL(I,J,L,8) = bbOCPI(I,J,L)
+            WAERSL(I,J,L,9) = bbOCPI1(I,J,L)
+            DAERSL(I,J,L,3) = bfOCPO(I,J,L) 
+            DAERSL(I,J,L,4) = bfOCPO1(I,J,L)
+            DAERSL(I,J,L,5) = bbOCPO(I,J,L)
+            DAERSL(I,J,L,6) = bbOCPO1(I,J,L)
          ENDDO
          ENDDO
          ENDDO
@@ -1645,7 +1658,9 @@
       MSDENS(4) = State_Chm%SpcData(id_SALA)%Info%Density
       MSDENS(5) = State_Chm%SpcData(id_SALC)%Info%Density
       MSDENS(6) = State_Chm%SpcData(id_bfOCPI)%Info%Density
-      MSDENS(7) = State_Chm%SpcData(id_bbOCPI)%Info%Density
+      MSDENS(7) = State_Chm%SpcData(id_bfOCPI1)%Info%Density
+      MSDENS(8) = State_Chm%SpcData(id_bbOCPI)%Info%Density
+      MSDENS(9) = State_Chm%SpcData(id_bbOCPI1)%Info%Density
 
       IF ( LUCX ) THEN
          ! These default values unused (actively retrieved from ucx_mod)
@@ -1880,18 +1895,34 @@
 
             IF ( .not. LUCX .or. ( LUCX .and. (N.LE.NRHAER)) ) THEN
             IF (N.EQ.6) THEN
-            !biofuel BrC, assuming fully aged BrC contributing 25%
+            !biofuel BrC (bfOCPI/O), assuming fully aged BrC contributing 25%
             !absorption
             brabs = SCALEOD*BXHEIGHT(I,J,L)*0.75d0
      &                         * bfOCPI(I,J,L) * QQAA(IWV,1,N) /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
-            brabs = brabs + SCALEOD*BXHEIGHT(I,J,L)*0.75d0 *0.25d0
-     &                         * bfOCPI1(I,J,L) * QQAA(IWV,1,N) /
-     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
-     &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
             brabs = brabs + 0.75d0 * BXHEIGHT(I,J,L) *
      &                         bfOCPO(I,J,L) * QQAA(IWV,1,N)  /
+     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
+     &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
+
+            brscat = SCALEOD*BXHEIGHT(I,J,L)*0.75d0
+     &                         * bfOCPI(I,J,L) * QQAA(IWV,1,N) /
+     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
+     &                         ( SCALESSA*SSAA(IWV,1,N) )
+            brscat = brscat + 0.75d0 * BXHEIGHT(I,J,L) *
+     &                         bfOCPO(I,J,L) * QQAA(IWV,1,N)  /
+     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
+     &                         (SCALESSA*SSAA(IWV,1,N) )
+            ODAER(I,J,L,IWV,N) = brabs + brscat
+
+            ELSEIF (N.EQ.7) THEN
+            !biofuel BrC (bfOCPI1/O1), assuming fully aged BrC contributing 25%
+            !absorption 
+            !REAA(*,6) is brc_bf.dat, REAA(*,7) is brc_bb.dat, defined
+            !in fast_jx_mod.F, which is why REAA(1,N-1)
+            brabs = SCALEOD*BXHEIGHT(I,J,L)*0.75d0 *0.25d0
+     &                         * bfOCPI1(I,J,L) * QQAA(IWV,1,N) /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
             brabs = brabs + 0.75d0 * BXHEIGHT(I,J,L) * 0.25d0*
@@ -1899,17 +1930,8 @@
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
 
-
             brscat = SCALEOD*BXHEIGHT(I,J,L)*0.75d0
-     &                         * bfOCPI(I,J,L) * QQAA(IWV,1,N) /
-     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
-     &                         ( SCALESSA*SSAA(IWV,1,N) )
-            brscat = brscat + SCALEOD*BXHEIGHT(I,J,L)*0.75d0
      &                         * bfOCPI1(I,J,L) * QQAA(IWV,1,N) /
-     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
-     &                         (SCALESSA*SSAA(IWV,1,N) )
-            brscat = brscat + 0.75d0 * BXHEIGHT(I,J,L) *
-     &                         bfOCPO(I,J,L) * QQAA(IWV,1,N)  /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (SCALESSA*SSAA(IWV,1,N) )
             brscat = brscat + 0.75d0 * BXHEIGHT(I,J,L) *
@@ -1919,19 +1941,37 @@
 
             ODAER(I,J,L,IWV,N) = brabs + brscat
 
-            ELSEIF (N.EQ.7) THEN
-            !bb BrC, assuming fully aged BrC contributing 25%
+            ELSEIF (N.EQ.8) THEN
+            !bb BrC (bbOCPI/O), assuming fully aged BrC contributing 25%
             !absorption
+            !REAA(*,6) is brc_bf.dat, REAA(*,7) is brc_bb.dat, defined
+            !in fast_jx_mod.F, which is why REAA(1,N-1)
             brabs = SCALEOD*BXHEIGHT(I,J,L)*0.75d0
      &                         * bbOCPI(I,J,L) * QQAA(IWV,1,N) /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
-            brabs = brabs + SCALEOD*BXHEIGHT(I,J,L)*0.75d0 *0.25d0
-     &                         * bbOCPI1(I,J,L) * QQAA(IWV,1,N) /
-     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
-     &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
             brabs = brabs + 0.75d0 * BXHEIGHT(I,J,L) *
      &                         bbOCPO(I,J,L) * QQAA(IWV,1,N)  /
+     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
+     &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
+
+            brscat = SCALEOD*BXHEIGHT(I,J,L)*0.75d0
+     &                         * bbOCPI(I,J,L) * QQAA(IWV,1,N) /
+     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
+     &                         ( SCALESSA*SSAA(IWV,1,N) )
+            brscat = brscat + 0.75d0 * BXHEIGHT(I,J,L) *
+     &                         bbOCPO(I,J,L) * QQAA(IWV,1,N)  /
+     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
+     &                         (SCALESSA*SSAA(IWV,1,N) )
+            ODAER(I,J,L,IWV,N) = brabs + brscat
+
+            ELSEIF (N.EQ.9) THEN
+            !bb BrC (bbOCPI/O), assuming fully aged BrC contributing 25%
+            !absorption
+            !REAA(*,6) is brc_bf.dat, REAA(*,7) is brc_bb.dat, defined
+            !in fast_jx_mod.F, which is why REAA(1,N-1)
+            brabs = SCALEOD*BXHEIGHT(I,J,L)*0.75d0 *0.25d0
+     &                         * bbOCPI1(I,J,L) * QQAA(IWV,1,N) /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
             brabs = brabs + 0.75d0 * BXHEIGHT(I,J,L) * 0.25d0*
@@ -1940,17 +1980,9 @@
      &                         (1.0d0 - SCALESSA*SSAA(IWV,1,N) )
 
             brscat = SCALEOD*BXHEIGHT(I,J,L)*0.75d0
-     &                         * bbOCPI(I,J,L) * QQAA(IWV,1,N) /
-     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
-     &                         ( SCALESSA*SSAA(IWV,1,N) )
-            brscat = brscat + SCALEOD*BXHEIGHT(I,J,L)*0.75d0
      &                         * bbOCPI1(I,J,L) * QQAA(IWV,1,N) /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
      &                         (SCALESSA*SSAA(IWV,1,N) ) 
-            brscat = brscat + 0.75d0 * BXHEIGHT(I,J,L) *
-     &                         bbOCPO(I,J,L) * QQAA(IWV,1,N)  /
-     &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
-     &                         (SCALESSA*SSAA(IWV,1,N) )
             brscat = brscat + 0.75d0 * BXHEIGHT(I,J,L) *
      &                         bbOCPO1(I,J,L) * QQAA(IWV,1,N)  /
      &                         ( MSDENS(N) * REAA(1,N) * 1.0D-6 ) *
@@ -2047,8 +2079,8 @@
               RTSSAER(I,J,L,IWV,N+IR-1)   = SCALESSA*SSAA(IWV,1,N)
               RTASYMAER(I,J,L,IWV,N+IR-1) = SCALEASY*ASYMAA(IWV,1,N)
              ENDDO
-            ELSEIF ((N.EQ.6) .OR. (N.EQ.7)) THEN
-             
+            ELSEIF ((N.EQ.6).OR.(N.EQ.7).OR.(N.EQ.8).OR. (N.EQ.9)) THEN
+! 6:bfOCPI/O, 7:bfOCPI1/O1, 8:bbOCPI/O, 9:bbOCPI1/O1(jmao, 07/25/2022)             
              RTODAER(I,J,L,IWV,NRT) = RTODAER(I,J,L,IWV,NRT) +
      &                                ODAER(I,J,L,IWV,N)
              RTSSAER(I,J,L,IWV,NRT) = (brscat + 
@@ -2185,6 +2217,28 @@
                   ! SDE 2015-10-27: RW is in um, but everything
                   ! else is in terms of cm. Correct with 10^-4 factor
                   DRYAREA = 3.D0 * DAERSL(I,J,L,N-1) / ( RW(1) *
+     &                      1.0D-4 * MSDENS(N) )
+
+                  ! Add surface area to TAREA array
+                  TAREA(I,J,L,N+NDUST) = WTAREA(I,J,L,N+NDUST) + DRYAREA
+
+                  ! Define a new effective radius that accounts
+                  ! for the hydrophobic aerosol
+                  ERADIUS(I,J,L,NDUST+N) = ( WERADIUS(I,J,L,NDUST+N) *
+     &                                       WTAREA(I,J,L,N+NDUST)   +
+     &                                       RW(1) * 1.0D-4 * DRYAREA )/
+     &                                     ( WTAREA(I,J,L,N+NDUST)   +
+     &                                       DRYAREA )
+               ENDIF !Hydrophobic aerosol surface area
+
+               !include hydrophobic bfOC and bbOC
+               !stored separate to hydrophillic in RT variables
+               IF ((N.eq.6).or.(N.eq.7).or.(N.eq.8).or.(N.eq.9)) THEN
+
+                  ! Dry surface area
+                  ! SDE 2015-10-27: RW is in um, but everything
+                  ! else is in terms of cm. Correct with 10^-4 factor
+                  DRYAREA = 3.D0 * DAERSL(I,J,L,N-3) / ( RW(1) *
      &                      1.0D-4 * MSDENS(N) )
 
                   ! Add surface area to TAREA array
@@ -2822,7 +2876,7 @@
       SOAMG = 0.0_fp
 
       ! Mass of hydrophobic aerosol from Mian Chin
-      ALLOCATE( DAERSL(State_Grid%NX,State_Grid%NY,State_Grid%NZ,2),
+      ALLOCATE( DAERSL(State_Grid%NX,State_Grid%NY,State_Grid%NZ,6),
      &          STAT=RC)
       CALL GC_CheckVar( 'aerosol_mod.F:DAERSL', 0, RC )
       IF ( RC /= GC_SUCCESS ) RETURN

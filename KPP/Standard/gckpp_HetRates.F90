@@ -6149,11 +6149,22 @@ MODULE GCKPP_HETRATES
                gamma = 0.005e0_fp + (0.02e0_fp - 0.005e0_fp) * &
                     ( RH_P - 40e0_fp ) / ( 70e0_fp - 40e0_fp )
             endif
+         !----------------
+         ! brown Carbon
+         !----------------
+         CASE ( 13, 14, 15, 16 )
+
+            ! Escoria et al (2010)
+            IF ( RH_P < 30e+0_fp ) THEN
+               GAMMA = 0.6e-4_fp
+            ELSE
+               GAMMA = 1.5e-4_fp
+            ENDIF
 
          !----------------
          ! Strat. aerosols
          !----------------
-         CASE ( 13, 14 )
+         CASE ( 17, 18 )
 
             ! These are handled outside this routine - something
             ! is wrong if AEROTYPE=13 or 14 reaches this point
@@ -6273,139 +6284,6 @@ MODULE GCKPP_HETRATES
       IF (RADIUS.le.1e-30_fp) THEN
          RETURN
       ENDIF
-
-      ! Special handling for various aerosols
-      SELECT CASE ( AEROTYPE )
-
-         !----------------
-         ! Dust
-         !----------------
-         CASE ( 1, 2, 3, 4, 5, 6, 7 )
-
-            ! Assume default gamma=0.1 on dust aerosols
-            ! This is tentative as no lab measurements presently exist
-            ! for gamma(HO2) on dust aerosols. We assume the rate to
-            ! be fast on dust aerosols as transition metal ion induced
-            ! chemistry is likely to occur in a thin aqueous surface layer.
-            GAMMA = 0.1e+0_fp
-
-         !----------------
-         ! For Sulfate(8), Black Carbon (9), Organic Carbon (10),
-         ! Sea-salt accum & coarse (11,12) calculate the
-         ! reaction probability due to self reaction
-         ! by using the algebraic expression in Thornton et al.  (2008)
-         ! (equation 7) which is a function of temperature, aerosol radius,
-         ! air density and HO2 concentration.
-         !
-         ! Transition metal ions (such as copper and iron) in sea-salt and
-         ! carbonaceous aerosols are complexed to ligands and/or exist at
-         ! a concentration too low to catalyze HO2 loss efficiently, so we
-         ! apply the HO2 self reaction expression directly for these aerosols.
-         !
-         ! In the case of sulfate aerosol, the aerosols likely
-         ! contain copper in the continental boundary layer and
-         ! HO2 uptake proceeds rapidly. To account for the metal catalyzed
-         ! uptake, we assume gamma(HO2)=0.07 (in the mid-range of the recommended
-         ! 0.04-0.1 by Thornton et al, based on observed copper concentrations
-         ! in the US boundary layer). Outside the continental boundary layer, we
-         ! use the HO2-only algebraic expression.
-         !
-         ! SDE 04/18/13: Added stratospheric sulfur aerosols
-         !
-         !----------------
-         CASE ( 8, 9, 10, 11, 12, 13 )
-
-            ! Mean molecular speed [cm/s]
-            w = 14550.5e+0_fp * sqrt(TEMP/(SQM*SQM))
-
-            ! DFKG = Gas phase diffusion coeff [cm2/s]
-            DFKG  = 9.45E+17_fp/DENAIR * SQRT(TEMP) *      &
-                    SQRT(3.472E-2_fp + 1.E+0_fp/(SQM*SQM))
-
-            !calculate T-dependent solubility and aq. reaction rate constants
-            ! hydronium ion concentration
-            ! A1 = 1.+(Keq/hplus)
-            ! with Keq = 2.1d-5 [M], Equilibrium constant for
-            ! HO2aq = H+ + O2- (Jacob, 2000)
-            !      hplus=10.e+0_fp^(-pH), with pH = 5
-            ! B1 = Req * TEMP
-            ! with Req = 1.987d-3 [kcal/K/mol], Ideal gas constant
-            ! Note that we assume a constant pH of 5.
-            A1 = 1.+ (2.1e-5_fp / (10.e+0_fp**(-5) ) )
-            B1 = 1.987e-3_fp * TEMP
-
-            ! Free energy change for solvation of HO2 (Hanson 1992, Golden 1991)
-            ! in [kcal/mol]:
-            ! delG = -4.9-(TEMP-298e+0_fp)*delS
-            ! with delS=-0.023  [kcal/mol/K],  Entropy change for solvation of HO2
-            delG  = -4.9e+0_fp - (TEMP-298.e+0_fp) * (-0.023)
-            H_eff = exp( -delG / B1 ) * A1
-
-            ! Estimated temp dependent value for HO2 + O2- (k1) and
-            ! HO2+HO2 (see Jacob 1989)
-            k1  =   1.58e+10_fp * exp( -3. / B1 )
-            k2  =   2.4e+9_fp   * exp( -4.7 / B1 )
-            kaq = ( k1 * (A1 - 1.e+0_fp) + k2) / (A1**2)
-
-            ! Calculate the mass transfer rate constant and s.s. conc. of
-            ! total HO2 in the aqueous phase:
-            ! kmt = (RADIUS/DFKG + 4e+0_fp/w/alpha)^(-1)
-            ! with alpha = mass accomodation coefficient, assumed
-            ! to be 1 (Thornton et al.)
-            kmt = 1.e+0_fp/( RADIUS/DFKG + 4e+0_fp/w/1. )
-
-            !use quadratic formula to obtain [O2-] in particle of radius RADIUS
-            A = -2e+0_fp * kaq
-            B = -3e+0_fp * kmt / RADIUS / (H_eff * 0.082 * TEMP)
-            C =  3e+0_fp * kmt * HO2DENS * 1000e+0_fp / RADIUS / AVO
-
-            ! Error check that B^2-(4e+0_fp*A*C) is not negative
-            TEST= B**2-(4e+0_fp*A*C)
-            IF ( TEST < 0e+0_fp ) THEN
-                GAMMA = 0e+0_fp
-            ELSE
-                ! Calculate the concentration of O2- in the aerosol
-                o2_ss= ( -B  -sqrt(B**2-(4e+0_fp*A*C)) )/(2e+0_fp*A)
-
-                ! Calculate the reactive flux
-                fluxrxn = kmt*HO2DENS - o2_ss*AVO*kmt/H_eff/Raq/TEMP
-
-                IF ( fluxrxn <= 0e0_fp ) THEN
-                   GAMMA = 0e+0_fp
-                ELSE
-                   ! Gamma for HO2 at TEMP, ho2, and RADIUS given
-                   GAMMA = 1./( ( ( HO2DENS/fluxrxn ) -              &
-                                  ( RADIUS/DFKG ) ) * w / 4.e+0_fp )
-                ENDIF
-            ENDIF
-            ! For sulfate aerosols, check whether we are in
-            ! the continental boundary layer, in which case
-            ! copper catalyzed HO2 uptake likely dominates and
-            ! speeds up the reaction: we assume gamma=0.07,
-            ! which is in the middle of the 0.04-0.1 range recommended
-            ! by Thornton et al. (2008)
-            !
-            IF ( AEROTYPE == 8 .and. CONTINENTAL_PBL == 1) THEN
-                GAMMA = 0.07
-            ENDIF
-
-         !----------------
-         ! NAT/ice (SDE 04/18/13)
-         !----------------
-         CASE ( 14 )
-
-            GAMMA = 0.e+0_fp
-
-         !----------------
-         ! Default
-         !----------------
-         CASE DEFAULT
-            WRITE (6,*) 'Not a suitable aerosol surface '
-            WRITE (6,*) 'for HO2 uptake'
-            WRITE (6,*) 'AEROSOL TYPE =',AEROTYPE
-            CALL GEOS_CHEM_STOP
-
-      END SELECT
 
       ! If negative value is calculated, set it to zero
       IF ( GAMMA  <= 0e+0_fp ) GAMMA = 0e+0_fp

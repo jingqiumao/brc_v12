@@ -944,9 +944,13 @@ CONTAINS
              CASE( 12 )
                 chmID = 'AeroAreaSSC'
              CASE( 13 )
-                chmID = 'AeroAreaBGSULF'
+                chmID = 'AeroAreabfOCPI'
              CASE( 14 )
-                chmID  = 'AeroAreaICEI'
+                chmID  = 'AeroAreabfOCPI1'
+             CASE( 15 )
+                chmID = 'AeroAreabbOCPI'
+             CASE( 16 )
+                chmID  = 'AeroAreabbOCPI1'
              CASE DEFAULT
                 ErrMsg = 'State_Chm%nAero exceeds the number of defined'    &
                          // ' dry aerosol area categories'
@@ -998,9 +1002,13 @@ CONTAINS
              CASE( 12 )
                 chmID = 'AeroRadiSSC'
              CASE( 13 )
-                chmID = 'AeroRadiBGSULF'
+                chmID = 'AeroRadibfOCPI'
              CASE( 14 )
-                chmID = 'AeroRadiICEI'
+                chmID = 'AeroRadibfOCPI1'
+             CASE( 15 )
+                chmID = 'AeroRadibbOCPI'
+             CASE( 16 )
+                chmID = 'AeroRadibbOCPI1'
              CASE DEFAULT
                 ErrMsg = 'State_Chm%nAero exceeds the number of defined'     &
                          // ' dry aerosol radius categories'
@@ -1052,9 +1060,13 @@ CONTAINS
              CASE( 12 )
                 chmID = 'WetAeroAreaSSC'
              CASE( 13 )
-                chmID = 'WetAeroAreaBGSULF'
+                chmID = 'WetAeroAreabfOCPI'
              CASE( 14 )
-                chmID = 'WetAeroAreaICEI'
+                chmID = 'WetAeroAreabfOCPI1'
+             CASE( 15 )
+                chmID = 'WetAeroAreabbOCPI'
+             CASE( 16 )
+                chmID = 'WetAeroAreabbOCPI1'
              CASE DEFAULT
                 ErrMsg = 'State_Chm%nAero exceeds the number of defined'     &
                          // ' wet aerosol area categories'
@@ -1106,9 +1118,13 @@ CONTAINS
              CASE( 12 )
                 chmID = 'WetAeroRadiSSC'
              CASE( 13 )
-                chmID = 'WetAeroRadiBGSULF'
+                chmID = 'WetAeroRadibfOCPI'
              CASE( 14 )
-                chmID = 'WetAeroRadiICEI'
+                chmID = 'WetAeroRadibfOCPI1'
+             CASE( 15 )
+                chmID = 'WetAeroRadibbOCPI'
+             CASE( 16 )
+                chmID = 'WetAeroRadibbOCPI1'
              CASE DEFAULT
                 ErrMsg = 'State_Chm%nAero exceeds the number of defined'     &
                          // ' wet aerosol radius categories'
@@ -1160,9 +1176,13 @@ CONTAINS
              CASE( 12 )
                 chmID = 'AeroH2OSSC'
              CASE( 13 )
-                chmID = 'AeroH2OBGSULF'
+                chmID = 'AeroH2ObfOCPI'
              CASE( 14 )
-                chmID = 'AeroH2OICEI'
+                chmID = 'AeroH2ObfOCPI1'
+             CASE( 15 )
+                chmID = 'AeroH2ObbOCPI'
+             CASE( 16 )
+                chmID = 'AeroH2ObbOCPI1'
              CASE DEFAULT
                 ErrMsg = 'State_Chm%nAero exceeds the number of defined'     &
                          // ' aerosol H2O categories'
@@ -2521,15 +2541,27 @@ CONTAINS
           IF ( isUnits ) Units = 'cm2 cm-3'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'AEROAREABGSULF' )
-          IF ( isDesc  ) Desc  = 'Dry aerosol area for background' &
-                                 // ' stratospheric sulfate'
+       CASE ( 'AEROAREABFOCPI' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol area for biofuel ' &
+                                 // ' brown carbon (bfOCPI)'
           IF ( isUnits ) Units = 'cm2 cm-3'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'AEROAREAICEI' )
-          IF ( isDesc  ) Desc  = 'Dry aerosol area for irregular ice cloud' &
-                                 // ' (Mischenko)'
+       CASE ( 'AEROAREABFOCPI1' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol area for aged biofuel' &
+                                 // ' brown carbon (bfOCPI1)'
+          IF ( isUnits ) Units = 'cm2 cm-3'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'AEROAREABBOCPI' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol area for biomass burning ' &
+                                 // ' brown carbon (bbOCPI)'
+          IF ( isUnits ) Units = 'cm2 cm-3'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'AEROAREABBOCPI1' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol area for aged biomass burning' &
+                                 // ' brown carbon (bbOCPI1)'
           IF ( isUnits ) Units = 'cm2 cm-3'
           IF ( isRank  ) Rank  = 3
 
@@ -2594,15 +2626,27 @@ CONTAINS
           IF ( isUnits ) Units = 'cm'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'AERORADIBGSULF' )
-          IF ( isDesc  ) Desc  = 'Dry aerosol radius for background' &
-                                 // ' stratospheric sulfate'
+       CASE ( 'AERORADIBFOCPI' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol radius for biofuel' &
+                                 // ' brown carbon'
           IF ( isUnits ) Units = 'cm'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'AERORADIICEI' )
-          IF ( isDesc  ) Desc  = 'Dry aerosol radius for irregular ice' &
-                                 // ' cloud (Mischenko)'
+       CASE ( 'AERORADIBFOCPI1' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol radius for aged biofuel' &
+                                 // ' brown carbon'
+          IF ( isUnits ) Units = 'cm'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'AERORADIBBOCPI' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol radius for biomass burning' &
+                                 // ' brown carbon'
+          IF ( isUnits ) Units = 'cm'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'AERORADIBBOCPI1' )
+          IF ( isDesc  ) Desc  = 'Dry aerosol radius for aged biomass burning' &
+                                 // ' brown carbon'
           IF ( isUnits ) Units = 'cm'
           IF ( isRank  ) Rank  = 3
 
@@ -2667,15 +2711,27 @@ CONTAINS
           IF ( isUnits ) Units = 'cm2 cm-3'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'WETAEROAREABGSULF' )
-          IF ( isDesc  ) Desc  = 'Wet aerosol area for background' &
-                                 // ' stratospheric sulfate'
+       CASE ( 'WETAEROAREABFOCPI' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol area for biofuel' &
+                                 // ' brown carbon'
           IF ( isUnits ) Units = 'cm2 cm-3'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'WETAEROAREAICEI' )
-          IF ( isDesc  ) Desc  = 'Wet aerosol area for irregular ice cloud' &
-                                 // ' (Mischenko)'
+       CASE ( 'WETAEROAREABFOCPI1' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol area for aged biofuel' &
+                                 // ' brwon carbon'
+          IF ( isUnits ) Units = 'cm2 cm-3'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'WETAEROAREABBOCPI' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol area for biomass burning' &
+                                 // ' brown carbon'
+          IF ( isUnits ) Units = 'cm2 cm-3'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'WETAEROAREABBOCPI1' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol area for aged biomass burning' &
+                                 // ' brwon carbon'
           IF ( isUnits ) Units = 'cm2 cm-3'
           IF ( isRank  ) Rank  = 3
 
@@ -2740,15 +2796,27 @@ CONTAINS
           IF ( isUnits ) Units = 'cm'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'WETAERORADIBGSULF' )
-          IF ( isDesc  ) Desc  = 'Wet aerosol radius for background' &
-                                // ' stratospheric sulfate'
+       CASE ( 'WETAERORADIBFOCPI' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol radius for biofuel' &
+                                // ' brown carbon'
           IF ( isUnits ) Units = 'cm'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'WETAERORADIICEI' )
-          IF ( isDesc  ) Desc  = 'Wet aerosol radius for irregular ice cloud' &
-                                // ' (Mischenko)'
+       CASE ( 'WETAERORADIBFOCPI1' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol radius for aged biofuel' &
+                                // ' brown carbon'
+          IF ( isUnits ) Units = 'cm'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'WETAERORADIBBOCPI' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol radius for biomass burning' &
+                                // ' brown carbon'
+          IF ( isUnits ) Units = 'cm'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'WETAERORADIBBOCPI1' )
+          IF ( isDesc  ) Desc  = 'Wet aerosol radius for aged biomass burning' &
+                                // ' brown carbon'
           IF ( isUnits ) Units = 'cm'
           IF ( isRank  ) Rank  = 3
 
@@ -2813,15 +2881,27 @@ CONTAINS
           IF ( isUnits ) Units = 'cm3(H2O) cm-3(air)'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'AEROH2OBGSULF' )
-          IF ( isDesc  ) Desc  = 'Aerosol H2O content for background' &
-                                // ' stratospheric sulfate'
+       CASE ( 'AEROH2OBFOCPI' )
+          IF ( isDesc  ) Desc  = 'Aerosol H2O content for biofuel' &
+                                // ' brown carbon'
           IF ( isUnits ) Units = 'cm3(H2O) cm-3(air)'
           IF ( isRank  ) Rank  = 3
 
-       CASE ( 'AEROH2OICEI' )
-          IF ( isDesc  ) Desc  = 'Aerosol H2O content for irregular ice cloud' &
-                                // ' (Mischenko)'
+       CASE ( 'AEROH2OBFOCPI1' )
+          IF ( isDesc  ) Desc  = 'Aerosol H2O content for aged biofuel' &
+                                // ' brown carbon'
+          IF ( isUnits ) Units = 'cm3(H2O) cm-3(air)'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'AEROH2OBBOCPI' )
+          IF ( isDesc  ) Desc  = 'Aerosol H2O content for biomass burning' &
+                                // ' brown carbon'
+          IF ( isUnits ) Units = 'cm3(H2O) cm-3(air)'
+          IF ( isRank  ) Rank  = 3
+
+       CASE ( 'AEROH2OBBOCPI1' )
+          IF ( isDesc  ) Desc  = 'Aerosol H2O content for aged biomass burning' &
+                                // ' brown carbon'
           IF ( isUnits ) Units = 'cm3(H2O) cm-3(air)'
           IF ( isRank  ) Rank  = 3
 
